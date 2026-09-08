@@ -93,3 +93,6 @@ def returns_summary(data: pd.DataFrame, group_column: str) -> pd.DataFrame:
     ).round(3)
 
     return (result.sort_values("return_rate", ascending=False,).reset_index(drop=True))
+
+def sort_by_sales(summary: pd.DataFrame) -> pd.DataFrame:
+    return summary.sort_values("total_sales", ascending=False).reset_index(drop=True)
