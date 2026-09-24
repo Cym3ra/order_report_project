@@ -4,6 +4,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 def clean_order_data(data: pd.DataFrame) -> pd.DataFrame:
+    """Normaliserar och typar om de kolumner som originalet rensade.
+
+    - text-kolumner trimmas och skrivs med inledande versal,
+    - saknade/ogiltiga tal ersätts med rimliga standardvärden,
+    - ``returned`` görs om till en riktig boolean.
+
+    Datan som skickas in ändras inte (funktionen jobbar på en kopia),
+    vilket gör beteendet förutsägbart och lättare att testa.
+    """
 
     clean_data = data.copy()
 
@@ -43,6 +52,11 @@ def clean_order_data(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def calculate_order_values(data: pd.DataFrame) -> pd.DataFrame:
+    """Lägger till ``order_value`` och ``discounted_value``.
+
+    ``order_value`` = ``quantity`` * ``unit_price``.
+    ``discounted_value`` = ``order_value`` * (1 - ``discount``).
+    """
 
     result = data.copy()
 
@@ -56,6 +70,8 @@ def calculate_order_values(data: pd.DataFrame) -> pd.DataFrame:
     return result
 
 def order_overview(data: pd.DataFrame) -> pd.DataFrame:
+    """Bygger den övergripande sammanfattningen (total, ordrar, returer)."""
+
     total_sales = round(float(data["discounted_value"].sum()), 2,)
     
     number_of_orders = int(data["order_id"].nunique())
@@ -77,6 +93,8 @@ def order_overview(data: pd.DataFrame) -> pd.DataFrame:
     )
 
 def summarise_data(data: pd.DataFrame, group_column: str) -> pd.DataFrame:
+    """Sammanställer försäljning och returer grupperat på en valfri kolumn."""
+
     summary = data.groupby(group_column, as_index=False,).agg(
         order_count=("order_id", "nunique"),
         total_sales=("discounted_value", "sum"),
@@ -87,6 +105,7 @@ def summarise_data(data: pd.DataFrame, group_column: str) -> pd.DataFrame:
     return (summary.sort_values("total_sales", ascending=False,).reset_index(drop=True))
 
 def returns_summary(data: pd.DataFrame, group_column: str) -> pd.DataFrame:
+    """Plockar ut returstatistik ur en ``summarize_by``-sammanställning."""
     result = (data.groupby("product_category", as_index=False,).agg
               (order_count=("order_id", "nunique"),
                 returns=("returned", "sum"),)
@@ -98,4 +117,5 @@ def returns_summary(data: pd.DataFrame, group_column: str) -> pd.DataFrame:
     return (result.sort_values("return_rate", ascending=False,).reset_index(drop=True))
 
 def sort_by_sales(summary: pd.DataFrame) -> pd.DataFrame:
+    """Sorterar en sammanställning fallande efter ``total_sales``."""
     return summary.sort_values("total_sales", ascending=False).reset_index(drop=True)

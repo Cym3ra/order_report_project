@@ -6,7 +6,9 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 def load_orders(path: Path) -> pd.DataFrame:
-
+    """Läser orderdata från en CSV-fil.
+    """
+    
     if not path.exists():
         raise FileNotFoundError(f"Hittar inte datafilen: {path}")
     

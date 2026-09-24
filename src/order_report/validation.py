@@ -14,6 +14,7 @@ REQUIRED_COLUMNS = {
 
 
 def validate_orders(data: pd.DataFrame) -> list[str]:
+    """Kör samtliga kontroller och samlar eventuella fel i en lista."""
     errors: list[str] = []
 
     missing_columns = REQUIRED_COLUMNS.difference(data.columns)

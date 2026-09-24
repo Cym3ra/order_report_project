@@ -21,6 +21,7 @@ def save_report(report: pd.DataFrame, path: Path, filename: str) -> None:
     logger.info("Sparade rapport till %s", output_path)
 
 def build_reports(report_data: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Beräknar samtliga rapporter utifrån rensad orderdata."""
     overview = order_overview(report_data)
 
     sales_by_category = sort_by_sales(summarise_data(report_data, "product_category"))
@@ -39,6 +40,7 @@ def build_reports(report_data: pd.DataFrame) -> dict[str, pd.DataFrame]:
 
 
 def create_reports(report_data: pd.DataFrame, output_dir:Path) -> dict[str, pd.DataFrame]:
+    """Bygger samtliga rapporter och sparar dem i ``output_dir``."""
     reports = build_reports(report_data)
     for filename, report in reports.items():
         save_report(report, output_dir, filename)

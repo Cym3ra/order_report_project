@@ -10,6 +10,9 @@ class ReportConfig:
 
 
 def configure_logging() -> None:
+    """Konfigurerar logging centralt för hela programmet.
+    """
+    
     logging.basicConfig(
         level=logging.INFO,
         format="%(levelname)s | %(name)s | %(message)s"

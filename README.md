@@ -21,7 +21,9 @@ Kräver Python 3.10 eller senare.
 ```bash
 # skapa och aktivera en virtuell miljö (valfritt men rekommenderas)
 python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
+
+ # Windows: 
+.venv\Scripts\activate
 
 # installera projektet och dess beroenden (pandas + pytest)
 pip install -e ".[dev]"
